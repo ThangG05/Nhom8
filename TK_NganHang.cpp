@@ -24,7 +24,7 @@ struct sdtk {
 };
 bool timstk(char stk[MAX]) {
     struct tk temp;
-    FILE* f = fopen("11.bin", "rb");
+    FILE* f = fopen("41.bin", "rb");
     if (f == NULL) return false;
     while (fread(&temp, sizeof(struct tk), 1, f) == 1) {
         if (strcmp(temp.stk, stk) == 0) {
@@ -37,7 +37,7 @@ bool timstk(char stk[MAX]) {
 }
 bool timemail(char email[MAX]) {
     struct tk temp;
-    FILE* f = fopen("11.bin", "rb");
+    FILE* f = fopen("41.bin", "rb");
     if (f == NULL) return false;
     while (fread(&temp, sizeof(struct tk), 1, f) == 1) {
         if (strcmp(temp.email, email) == 0) {
@@ -48,9 +48,22 @@ bool timemail(char email[MAX]) {
     fclose(f);
     return false;
 }
+bool timtendangnhapl(char ten[MAX]) {
+    struct tk temp;
+    FILE* f = fopen("41.bin", "rb");
+    if (f == NULL) return false;
+    while (fread(&temp, sizeof(struct tk), 1, f) == 1) {
+        if (strcmp(temp.tendangnhap,ten) == 0) {
+            fclose(f);
+            return true;
+        }
+    }
+    fclose(f);
+    return false;
+}
 bool timOTP(char otp[MAX]) {
     struct sdtk temp;
-    FILE* f = fopen("12.bin", "rb");
+    FILE* f = fopen("42.bin", "rb");
     if (f == NULL) return false;
     while (fread(&temp, sizeof(struct sdtk), 1, f) == 1) {
         if (strcmp(temp.OTP, otp) == 0) {
@@ -86,7 +99,7 @@ void chuanhoa(char ten[]) {
     }
 }
 void luusd(struct sdtk* a) {
-    FILE* f = fopen("12.bin", "ab+");
+    FILE* f = fopen("42.bin", "ab+");
     if (f != NULL) {
         fwrite(a, sizeof(struct sdtk), 1, f);
         fclose(f);
@@ -103,7 +116,6 @@ bool kiem_tra_so(char chuoi[]) {
 bool ktramk(char a[]) {
     int d = 0;
     int d1 = 0;
-    int d2 = 0;
     for (int i = 0; i < strlen(a); i++) {
         if (a[i] >= 'A' && a[i] <= 'Z') {
             d++;
@@ -111,11 +123,8 @@ bool ktramk(char a[]) {
         if (a[i] >= '0' && a[i] <= '9') {
             d1++;
         }
-        if (a[i]-'0' >= 34 && a[i]-'0' <= 47) {
-            d2++;
-        }
     }
-    if (d > 0 && d1 > 0 && d2>0) {
+    if (d > 0 && d1 > 0) {
         return true;
     }
     return false;
@@ -140,7 +149,7 @@ void dangky(struct tk* a) {
     printf("-->Nhap mat khau: ");
     scanf("%s", a->mk);
     while ((strlen(a->mk) < 8 || strlen(a->mk) > 16) || ktramk(a->mk) == false) {
-        printf("mat khau khong du manh (>=8 va <=16 ky tu), chua it nhat 1 ky tu in hoa va so va ky tu dac biet");
+        printf("mat khau khong du manh ( >=8 va <=16 ky tu), chua it nhat 1 ky tu in hoa va so va co the co ky tu dac biet");
         printf("\n-->Nhap lai mat khau:");
         scanf("%s", a->mk);
     }
@@ -184,8 +193,8 @@ void dangky(struct tk* a) {
     else {
         printf("-->Nhap so tai khoan:");
         scanf("%s", a->stk);
-        while (timstk(a->stk)) {
-            printf("So tai khoan nay da duoc tao roi!!!");
+        while (timstk(a->stk) || strlen(a->stk)!=10) {
+            printf("So tai khoan nay da duoc tao , hoac khong dung 10 so");
             printf("\n-->Nhap lai stk:");
             scanf("%s", a->stk);
         }
@@ -202,14 +211,14 @@ void dangky(struct tk* a) {
     }
 }
 void luutk(struct tk* a) {
-    FILE* f = fopen("11.bin", "ab+");
+    FILE* f = fopen("41.bin", "ab+");
     if (f != NULL) {
         fwrite(a, sizeof(struct tk), 1, f);
         fclose(f);
     }
 }
 bool dangnhap(char ten[20], char mk[20], struct tk* a) {
-    FILE* f = fopen("11.bin", "rb");
+    FILE* f = fopen("41.bin", "rb");
     if (f == NULL) return false;
     while (fread(a, sizeof(struct tk), 1, f) == 1) {
         if (strcmp(a->tendangnhap, ten) == 0 && strcmp(a->mk, mk) == 0) {
@@ -221,7 +230,7 @@ bool dangnhap(char ten[20], char mk[20], struct tk* a) {
     return false;
 }
 bool dangnhaptk(char ten[20], struct tk* a) {
-    FILE* f = fopen("11.bin", "rb");
+    FILE* f = fopen("41.bin", "rb");
     if (f == NULL) return false;
     while (fread(a, sizeof(struct tk), 1, f) == 1) {
         if (strcmp(a->tendangnhap, ten) == 0) {
@@ -233,7 +242,7 @@ bool dangnhaptk(char ten[20], struct tk* a) {
     return false;
 }
 struct tk* timkiem(struct tk* a, char so[]) {
-    FILE* f = fopen("11.bin", "rb");
+    FILE* f = fopen("41.bin", "rb");
     struct tk temp;
     while (fread(&temp, sizeof(struct tk), 1, f) == 1) {
         if (strcmp(temp.stk, so) == 0) {
@@ -246,7 +255,7 @@ struct tk* timkiem(struct tk* a, char so[]) {
     return NULL;
 }
 struct sdtk* timkiemsdtk(struct sdtk* a, char so[]) {
-    FILE* f = fopen("12.bin", "rb");
+    FILE* f = fopen("42.bin", "rb");
     struct sdtk temp;
     while (fread(&temp, sizeof(struct sdtk), 1, f) == 1) {
         if (strcmp(temp.STK, so) == 0) {
@@ -269,7 +278,7 @@ void hienthi1(struct tk* t) {
     printf("+---------------------+-------------+--------------------+-------------------+-------------+--------------+-----------+---------------------+\n");
 }
 void hienthi_ds(struct tk t) {
-    FILE* f = fopen("11.bin", "rb");
+    FILE* f = fopen("41.bin", "rb");
     if (f == NULL) return;
     printf("+---------------------+-------------+--------------------+-------------------+-------------+--------------+-----------+---------------------+\n");
     printf("|  Ho ten nguoi dung  |   Vai tro   |    Ten dang nhap   |   Ten tai khoan   |     STK     |     CCCD     |    SDT    |        Email        |\n");
@@ -290,7 +299,7 @@ void sdu_lon_nho(struct tk* t, float x) {
     printf("+---------------------+-------------------+--------------+--------------+\n");
 }
 void capnhat_tai_khoan(struct tk* t) {
-    FILE* f = fopen("11.bin", "rb+");
+    FILE* f = fopen("41.bin", "rb+");
     if (f == NULL) return;
     struct tk temp;
     long pos;
@@ -306,7 +315,7 @@ void capnhat_tai_khoan(struct tk* t) {
     fclose(f);
 }
 void capnhat_sodu(struct sdtk* t) {
-    FILE* f = fopen("12.bin", "rb+");
+    FILE* f = fopen("42.bin", "rb+");
     if (f == NULL) return;
     struct sdtk temp;
     long pos;
@@ -325,7 +334,7 @@ void hienthisodu(struct sdtk* a) {
     printf("|%-15s |%-19.3f |\n", a->STK, a->sodu);
 }
 void hienthisodu_ds(struct sdtk a) {
-    FILE* f = fopen("12.bin", "rb");
+    FILE* f = fopen("42.bin", "rb");
     if (f == NULL) return;
     printf("+----------------+--------------------+\n");
     printf("|       STK      |   SO DU HIEN TAI   |\n");
@@ -339,7 +348,7 @@ void hienthisodu_ds(struct sdtk a) {
 struct sdtk* timsodumax(struct sdtk* a) {
     struct sdtk tien;
     float maxtien = 0;
-    FILE* f = fopen("12.bin", "rb");
+    FILE* f = fopen("42.bin", "rb");
     if (f == NULL) return NULL;
     while (fread(&tien, sizeof(struct sdtk), 1, f) == 1) {
         if (tien.sodu > maxtien) {
@@ -353,7 +362,7 @@ struct sdtk* timsodumax(struct sdtk* a) {
 struct sdtk* timsodumin(struct sdtk* a) {
     struct sdtk tien;
     float mintien = 1e10;
-    FILE* f = fopen("12.bin", "rb");
+    FILE* f = fopen("42.bin", "rb");
     if (f == NULL) return NULL;
     while (fread(&tien, sizeof(struct sdtk), 1, f) == 1) {
         if (tien.sodu < mintien) {
@@ -622,8 +631,8 @@ int main() {
                                         if (suastk != NULL) {
                                             printf("-->Nhap so tai khoan can thay doi:");
                                             scanf("%s", stknew);
-                                            while (timstk(stknew)) {
-                                                printf("So tai khoan nay da duoc tao roi!!!");
+                                            while (timstk(stknew) || strlen(stknew)!=10) {
+                                                printf("So tai khoan nay da duoc tao roi,hoac khong dung 10 ky tu so");
                                                 printf("\n-->Nhap lai stk:");
                                                 scanf("%s", stknew);
                                             }
@@ -673,7 +682,7 @@ int main() {
                                     printf("+---+------------------------------+\n");
                                     int kh;
                                     printf("--> Lua chon:"); scanf("%d", &kh);
-                                    FILE* f = fopen("12.bin", "rb");
+                                    FILE* f = fopen("42.bin", "rb");
                                     float x;
                                     float y;
                                     switch (kh)
